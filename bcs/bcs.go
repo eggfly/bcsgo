@@ -4,12 +4,11 @@ import (
 	"crypto/hmac"
 	"crypto/sha1"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
 )
-
-const BCS_HOST = "http://bcs.duapp.com"
 
 type BCS struct {
 	ak, sk     string
@@ -20,14 +19,22 @@ func NewBCS(ak, sk string) *BCS {
 	return &BCS{ak, sk, NewHttpClient()}
 }
 
-func (this *BCS) ListBuckets() []Bucket {
+func (this *BCS) ListBuckets() ([]Bucket, error) {
 	link := this.getUrl()
-	body, err := this.httpClient.Get(link)
-	fmt.Println(body, err)
-	return nil
+	data, err := this.httpClient.Get(link)
+	if err != nil {
+		return nil, err
+	} else {
+		v := &[]Bucket{}
+		err := json.Unmarshal(data, v)
+		for _, bucket := range *v {
+			bucket.bcs = this
+		}
+		return *v, err
+	}
 }
 func (this *BCS) getUrl() string {
-	return this.simpleSign("GET", "", "/")
+	return this.simpleSign(GET, "", "/")
 }
 func (this *BCS) simpleSign(m, b, o string) string {
 	return this.Sign(m, b, o, "", "", "")

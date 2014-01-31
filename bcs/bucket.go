@@ -4,11 +4,12 @@ import (
 // "fmt"
 )
 
-type Bucket struct {
+type bucketStruct struct {
 	bcs  *BCS
-	Name string
+	Name string `json:"bucket_name"`
 }
+type Bucket *bucketStruct
 
-func newBucket(bcs *BCS, bucketName string) *Bucket {
-	return &Bucket{bcs, bucketName}
+func newBucket(bcs *BCS, bucketName string) Bucket {
+	return &bucketStruct{bcs, bucketName}
 }
