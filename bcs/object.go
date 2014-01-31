@@ -1,15 +1,14 @@
 package bcs
 
 import (
-	"fmt"
+// "fmt"
 )
 
 type Object struct {
+	bucket *Bucket
+	Name   string
 }
 
-func (this *Object) String() string {
-	return fmt.Sprint(&this)
-}
-
-func (this *Object) Foo() {
+func newObject(bucket *Bucket, objectName string) *Object {
+	return &Object{bucket, objectName}
 }

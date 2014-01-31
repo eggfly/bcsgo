@@ -12,13 +12,26 @@ import (
 const BCS_HOST = "http://bcs.duapp.com"
 
 type BCS struct {
-	ak, sk string
+	ak, sk     string
+	httpClient *HttpClient
 }
 
 func NewBCS(ak, sk string) *BCS {
-	return &BCS{ak, sk}
+	return &BCS{ak, sk, NewHttpClient()}
 }
 
+func (this *BCS) ListBuckets() []Bucket {
+	link := this.getUrl()
+	body, err := this.httpClient.Get(link)
+	fmt.Println(body, err)
+	return nil
+}
+func (this *BCS) getUrl() string {
+	return this.simpleSign("GET", "", "/")
+}
+func (this *BCS) simpleSign(m, b, o string) string {
+	return this.Sign(m, b, o, "", "", "")
+}
 func (this *BCS) Sign(m, b, o, t, i, s string) string {
 	flag := ""
 	ss := ""
