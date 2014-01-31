@@ -19,13 +19,13 @@ func NewBCS(ak, sk string) *BCS {
 	return &BCS{ak, sk, NewHttpClient()}
 }
 
-func (this *BCS) ListBuckets() ([]Bucket, error) {
+func (this *BCS) ListBuckets() ([]*Bucket, error) {
 	link := this.getUrl()
 	data, err := this.httpClient.Get(link)
 	if err != nil {
 		return nil, err
 	} else {
-		pList := &[]Bucket{}
+		pList := &[]*Bucket{}
 		err := json.Unmarshal(data, pList)
 		list := *pList
 		for i, _ := range list {
