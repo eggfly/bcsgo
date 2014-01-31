@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
+
 	bcs := bcs.NewBCS("vYlphQiwbhVz67jjW48ddY3C", "mkfr0AYygGjgm4MIC7KBc7qzFOtz9Nha")
 	url := bcs.Sign("GET", "", "/", "", "", "")
 	url_ex := "http://bcs.duapp.com//?sign=MBO:vYlphQiwbhVz67jjW48ddY3C:yf27Oy6JVtK6nxRtIASKX6H%2BR4I%3D"
