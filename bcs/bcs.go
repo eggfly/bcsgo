@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-const host = "http://bcs.duapp.com"
+const BCS_HOST = "http://bcs.duapp.com"
 
 type BCS struct {
 	ak, sk string
@@ -53,7 +53,7 @@ func (this *BCS) Sign(m, b, o, t, i, s string) string {
 	sign := h(this.sk, ss)
 	url := fmt.Sprintf(
 		"%s/%s%s?sign=%s:%s:%s",
-		host,
+		BCS_HOST,
 		b,
 		"/"+url.QueryEscape(o[1:]),
 		flag,

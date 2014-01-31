@@ -10,3 +10,6 @@ type Object struct {
 func (this *Object) String() string {
 	return fmt.Sprint(&this)
 }
+
+func (this *Object) Foo() {
+}
