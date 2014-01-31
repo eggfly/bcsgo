@@ -25,12 +25,13 @@ func (this *BCS) ListBuckets() ([]Bucket, error) {
 	if err != nil {
 		return nil, err
 	} else {
-		v := &[]Bucket{}
-		err := json.Unmarshal(data, v)
-		for _, bucket := range *v {
-			bucket.bcs = this
+		pList := &[]Bucket{}
+		err := json.Unmarshal(data, pList)
+		list := *pList
+		for i, _ := range list {
+			list[i].bcs = this
 		}
-		return *v, err
+		return list, err
 	}
 }
 func (this *BCS) getUrl() string {
