@@ -15,7 +15,14 @@ func (this *Bucket) getUrl() string {
 	return this.bcs.simpleSign(GET, this.Name, "/")
 }
 
-func (this *Bucket) ListObjects(prefix string, start, limit int) ([]Object, error) {
+func (this *Bucket) Object(absolutePath string) *Object {
+	o := Object{}
+	o.bucket = this
+	o.AbsolutePath = absolutePath
+	return &o
+}
+
+func (this *Bucket) ListObjects(prefix string, start, limit int) (*ObjectCollection, error) {
 	params := url.Values{}
 	params.Set("start", string(start))
 	params.Set("limit", string(limit))
@@ -25,13 +32,16 @@ func (this *Bucket) ListObjects(prefix string, start, limit int) ([]Object, erro
 	if err != nil {
 		return nil, err
 	} else {
-		pList := &[]Object{}
-		err := json.Unmarshal(data, pList)
-		list := *pList
-		for i, _ := range list {
-			list[i].bucket = this
+		var objectsInfo ObjectCollection
+		err := json.Unmarshal(data, &objectsInfo)
+		fmt.Println(objectsInfo)
+		if err != nil {
+			return nil, err
+		} else {
+			for i, _ := range objectsInfo.Objects {
+				objectsInfo.Objects[i].bucket = this
+			}
+			return &objectsInfo, nil
 		}
-		return list, err
 	}
-	return nil, nil
 }

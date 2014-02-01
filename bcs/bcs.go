@@ -25,9 +25,8 @@ func (this *BCS) ListBuckets() ([]*Bucket, error) {
 	if err != nil {
 		return nil, err
 	} else {
-		pList := &[]*Bucket{}
-		err := json.Unmarshal(data, pList)
-		list := *pList
+		list := []*Bucket{}
+		err := json.Unmarshal(data, &list)
 		for i, _ := range list {
 			list[i].bcs = this
 		}

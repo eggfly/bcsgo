@@ -15,9 +15,9 @@ func main() {
 	fmt.Println(e)
 	for _, pBucket := range b {
 		fmt.Println(pBucket)
-		o, e := pBucket.ListObjects("", 0, 10)
+		o, e := pBucket.ListObjects("", 0, 5)
 		fmt.Println(e)
-		for _, pObject := range o {
+		for _, pObject := range o.Objects {
 			fmt.Println(pObject)
 		}
 	}
