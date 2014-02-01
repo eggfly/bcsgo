@@ -1,6 +1,6 @@
-baidu-bcs-sdk-go
+bcs-go
 ================
 
-golang baidu bcs sdk
+Golang Baidu BCS SDK
 
-BCS Doc Reference: [http://developer.baidu.com/wiki/index.php?title=docs/cplat/bcs](http://developer.baidu.com/wiki/index.php?title=docs/cplat/bcs)
+Baidu Official BCS Doc: [http://developer.baidu.com/wiki/index.php?title=docs/cplat/bcs](http://developer.baidu.com/wiki/index.php?title=docs/cplat/bcs)
