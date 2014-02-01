@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/eggfly/baidu-bcs-sdk-go/bcs"
+	"github.com/eggfly/bcs-go/bcs"
 )
 
 func main() {
