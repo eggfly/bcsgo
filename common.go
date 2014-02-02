@@ -1,4 +1,4 @@
-package bcs
+package bcsgo
 
 const (
 	GET  = "GET"

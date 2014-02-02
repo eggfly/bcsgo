@@ -1,4 +1,4 @@
-package bcs
+package bcsgo
 
 import (
 	"crypto/hmac"

@@ -1,13 +1,12 @@
-package bcs
+package bcsgo
 
 import (
 	"fmt"
-	"github.com/eggfly/bcsgo/bcs"
 	"testing"
 )
 
 func Test(t *testing.T) {
-	bcs := bcs.NewBCS("vYlphQiwbhVz67jjW48ddY3C", "mkfr0AYygGjgm4MIC7KBc7qzFOtz9Nha")
+	bcs := NewBCS("vYlphQiwbhVz67jjW48ddY3C", "mkfr0AYygGjgm4MIC7KBc7qzFOtz9Nha")
 	url := bcs.Sign("GET", "", "/", "", "", "")
 	url_ex := "http://bcs.duapp.com//?sign=MBO:vYlphQiwbhVz67jjW48ddY3C:yf27Oy6JVtK6nxRtIASKX6H%2BR4I%3D"
 	fmt.Println("test sign", url == url_ex)

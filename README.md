@@ -1,4 +1,4 @@
-bcs-go
+bcsgo
 ================
 
 Golang Baidu BCS SDK
