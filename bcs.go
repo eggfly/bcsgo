@@ -21,7 +21,7 @@ func NewBCS(ak, sk string) *BCS {
 
 func (this *BCS) ListBuckets() ([]*Bucket, error) {
 	link := this.getUrl()
-	data, err := this.httpClient.Get(link)
+	_, data, err := this.httpClient.Get(link)
 	if err != nil {
 		return nil, err
 	} else {

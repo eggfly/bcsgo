@@ -3,6 +3,7 @@ package bcsgo
 const (
 	GET  = "GET"
 	POST = "POST"
+	PUT  = "PUT"
 )
 
 const (

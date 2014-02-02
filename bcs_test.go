@@ -13,12 +13,16 @@ func Test(t *testing.T) {
 	b, e := bcs.ListBuckets()
 
 	fmt.Println(e)
-	for _, pBucket := range b {
-		fmt.Println(pBucket)
-		o, e := pBucket.ListObjects("", 0, 5)
-		fmt.Println(e)
-		for _, pObject := range o.Objects {
-			fmt.Println(pObject)
-		}
-	}
+	// for _, pBucket := range b {
+	// 	fmt.Println(pBucket)
+	// 	o, e := pBucket.ListObjects("", 0, 5)
+	// 	fmt.Println(e)
+	// 	for _, pObject := range o.Objects {
+	// 		fmt.Println(pObject)
+	// 	}
+	// }
+
+	testObj := b[0].Object("/test.txt")
+	testObj, err := testObj.PutFile("test.txt")
+	fmt.Println(testObj, err)
 }
