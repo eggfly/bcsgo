@@ -78,7 +78,8 @@ func (this *BCS) Sign(m, b, o, t, i, s string) string {
 		"%s/%s%s?sign=%s:%s:%s",
 		BCS_HOST,
 		b,
-		"/"+url.QueryEscape(o[1:]),
+		//"/"+url.QueryEscape(o[1:]),
+		url.QueryEscape(o),
 		flag,
 		this.ak,
 		sign)

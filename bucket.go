@@ -19,9 +19,20 @@ func (this *Bucket) getUrl() string {
 func (this *Bucket) putUrl() string {
 	return this.bcs.simpleSign(PUT, this.Name, "/")
 }
+func (this *Bucket) deleteUrl() string {
+	return this.bcs.simpleSign(DELETE, this.Name, "/")
+}
 func (this *Bucket) Create() error {
 	link := this.putUrl()
 	resp, _, err := this.bcs.httpClient.Put(link, nil, 0)
+	if resp.StatusCode != http.StatusOK {
+		err = errors.New("request not ok, status: " + string(resp.StatusCode))
+	}
+	return err
+}
+func (this *Bucket) Delete() error {
+	link := this.deleteUrl()
+	resp, _, err := this.bcs.httpClient.Delete(link)
 	if resp.StatusCode != http.StatusOK {
 		err = errors.New("request not ok, status: " + string(resp.StatusCode))
 	}

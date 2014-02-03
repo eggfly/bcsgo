@@ -28,16 +28,27 @@ func (this *HttpClient) Put(url string, data io.Reader, size int64) (*http.Respo
 		return nil, nil, err
 	}
 	req.ContentLength = size
-	dump, dumpErr := httputil.DumpRequest(req, false)
-	log.Println(string(dump), dumpErr)
+	this.dumpRequest(req)
 	old := time.Now()
 	resp, err := this.client.Do(req)
 	log.Println(time.Now().Sub(old))
 	respData, err := this.handleResponseContent(resp, err)
-	log.Println(string(respData), err)
 	return resp, respData, err
 }
-
+func (this *HttpClient) Delete(url string) (*http.Response, []byte, error) {
+	req, err := http.NewRequest(DELETE, url, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	this.dumpRequest(req)
+	resp, err := this.client.Do(req)
+	respData, err := this.handleResponseContent(resp, err)
+	return resp, respData, err
+}
+func (this *HttpClient) dumpRequest(req *http.Request) {
+	dump, dumpErr := httputil.DumpRequest(req, false)
+	log.Println(string(dump), dumpErr)
+}
 func (this *HttpClient) handleResponseContent(resp *http.Response, err error) ([]byte, error) {
 	dump, dumpErr := httputil.DumpResponse(resp, true)
 	log.Println(string(dump), dumpErr)
@@ -45,6 +56,8 @@ func (this *HttpClient) handleResponseContent(resp *http.Response, err error) ([
 		return nil, err
 	} else {
 		defer resp.Body.Close()
-		return ioutil.ReadAll(resp.Body)
+		respData, err := ioutil.ReadAll(resp.Body)
+		log.Println(string(respData), err)
+		return respData, err
 	}
 }

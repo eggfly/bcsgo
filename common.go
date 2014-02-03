@@ -1,9 +1,10 @@
 package bcsgo
 
 const (
-	GET  = "GET"
-	POST = "POST"
-	PUT  = "PUT"
+	GET    = "GET"
+	POST   = "POST"
+	PUT    = "PUT"
+	DELETE = "DELETE"
 )
 
 const (
