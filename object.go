@@ -2,6 +2,7 @@ package bcsgo
 
 import (
 	// "encoding/json"
+	"errors"
 	"net/http"
 	"os"
 	"strconv"
@@ -23,7 +24,9 @@ type Object struct {
 func (this *Object) putUrl() string {
 	return this.bucket.bcs.simpleSign(PUT, this.bucket.Name, this.AbsolutePath)
 }
-
+func (this *Object) deleteUrl() string {
+	return this.bucket.bcs.simpleSign(DELETE, this.bucket.Name, this.AbsolutePath)
+}
 func (this *Object) PutFile(localFile string) (*Object, error) {
 	link := this.putUrl()
 	file, err := os.Open(localFile)
@@ -43,4 +46,12 @@ func (this *Object) PutFile(localFile string) (*Object, error) {
 		this.Size, _ = strconv.ParseUint(resp.Header["X-Bs-File-Size"][0], 10, 64)
 		return this, err
 	}
+}
+func (this *Object) Delete() error {
+	link := this.deleteUrl()
+	resp, _, err := this.bucket.bcs.httpClient.Delete(link)
+	if resp.StatusCode != http.StatusOK {
+		err = errors.New("request not ok, status: " + string(resp.StatusCode))
+	}
+	return err
 }

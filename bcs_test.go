@@ -29,4 +29,6 @@ func Test(t *testing.T) {
 	testObj := b[0].Object("/test.txt")
 	testObj, err := testObj.PutFile("test.txt")
 	fmt.Println(testObj, err)
+	deleteErr := testObj.Delete()
+	fmt.Println(deleteErr)
 }
