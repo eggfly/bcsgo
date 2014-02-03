@@ -1,0 +1,8 @@
+list objects with prefix
+acl of buckets and objects
+post to upload object
+superfile and superfile2
+
+
+
+create objects with dir will create all dirs
