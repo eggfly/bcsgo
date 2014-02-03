@@ -30,7 +30,11 @@ func (this *Object) PutFile(localFile string) (*Object, error) {
 	if err != nil {
 		return nil, err
 	}
-	resp, _, err := this.bucket.bcs.httpClient.Put(link, file)
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return nil, err
+	}
+	resp, _, err := this.bucket.bcs.httpClient.Put(link, file, fileInfo.Size())
 	if err != nil || resp.StatusCode != http.StatusOK {
 		return nil, err
 	} else {

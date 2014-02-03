@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httputil"
+	"time"
 )
 
 type HttpClient struct {
@@ -21,14 +22,17 @@ func (this *HttpClient) Get(url string) (*http.Response, []byte, error) {
 	respData, err := this.handleResponseContent(resp, err)
 	return resp, respData, err
 }
-func (this *HttpClient) Put(url string, data io.Reader) (*http.Response, []byte, error) {
+func (this *HttpClient) Put(url string, data io.Reader, size int64) (*http.Response, []byte, error) {
 	req, err := http.NewRequest(PUT, url, data)
-	dump, dumpErr := httputil.DumpRequest(req, true)
-	log.Println(string(dump), dumpErr)
 	if err != nil {
 		return nil, nil, err
 	}
+	req.ContentLength = size
+	dump, dumpErr := httputil.DumpRequest(req, false)
+	log.Println(string(dump), dumpErr)
+	old := time.Now()
 	resp, err := this.client.Do(req)
+	log.Println(time.Now().Sub(old))
 	respData, err := this.handleResponseContent(resp, err)
 	log.Println(string(respData), err)
 	return resp, respData, err
