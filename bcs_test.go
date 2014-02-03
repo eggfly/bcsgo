@@ -10,8 +10,10 @@ func Test(t *testing.T) {
 	url := bcs.Sign("GET", "", "/", "", "", "")
 	url_ex := "http://bcs.duapp.com//?sign=MBO:vYlphQiwbhVz67jjW48ddY3C:yf27Oy6JVtK6nxRtIASKX6H%2BR4I%3D"
 	fmt.Println("test sign", url == url_ex)
+	newBucket := bcs.Bucket("testBucket")
+	bucketErr := newBucket.Create()
+	fmt.Println(bucketErr)
 	b, e := bcs.ListBuckets()
-
 	fmt.Println(e)
 	// for _, pBucket := range b {
 	// 	fmt.Println(pBucket)

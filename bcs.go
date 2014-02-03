@@ -36,6 +36,9 @@ func (this *BCS) ListBuckets() ([]*Bucket, error) {
 func (this *BCS) getUrl() string {
 	return this.simpleSign(GET, "", "/")
 }
+func (this *BCS) Bucket(bucketName string) *Bucket {
+	return &Bucket{this, bucketName}
+}
 func (this *BCS) simpleSign(m, b, o string) string {
 	return this.Sign(m, b, o, "", "", "")
 }

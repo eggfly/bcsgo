@@ -2,7 +2,9 @@ package bcsgo
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"net/http"
 	"net/url"
 )
 
@@ -14,7 +16,17 @@ type Bucket struct {
 func (this *Bucket) getUrl() string {
 	return this.bcs.simpleSign(GET, this.Name, "/")
 }
-
+func (this *Bucket) putUrl() string {
+	return this.bcs.simpleSign(PUT, this.Name, "/")
+}
+func (this *Bucket) Create() error {
+	link := this.putUrl()
+	resp, _, err := this.bcs.httpClient.Put(link, nil, 0)
+	if resp.StatusCode != http.StatusOK {
+		err = errors.New("request not ok, status: " + string(resp.StatusCode))
+	}
+	return err
+}
 func (this *Bucket) Object(absolutePath string) *Object {
 	o := Object{}
 	o.bucket = this
