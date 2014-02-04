@@ -82,7 +82,7 @@ func (this *Bucket) GetACL() (string, error) {
 func (this *Bucket) SetACL(acl string) error {
 	link := this.putACLUrl()
 	modifyHeader := func(header *http.Header) {
-		header.Set("x-bs-acl", acl)
+		header.Set(HEADER_ACL, acl)
 	}
 	_, _, err := this.bcs.httpClient.Put(link, nil, 0, modifyHeader)
 	return err

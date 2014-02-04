@@ -36,11 +36,11 @@ func Test(t *testing.T) {
 	bcssdk := bcs.Bucket("bcssdk")
 	acl, aclErr := bcssdk.GetACL()
 	fmt.Println("get acl:", acl, aclErr)
-	fmt.Println("put acl:", bcssdk.SetACL("public-read"))
+	fmt.Println("put acl:", bcssdk.SetACL(ACL_PUBLIC_READ))
 	testObj := bcssdk.Object("/testDir/test.txt")
-	testObj, err := testObj.PutFile("test.txt")
+	testObj, err := testObj.PutFile("test.txt", ACL_PUBLIC_READ)
 	fmt.Println(testObj, err)
 
-	deleteErr := testObj.Delete()
-	fmt.Println(deleteErr)
+	// deleteErr := testObj.Delete()
+	// fmt.Println(deleteErr)
 }

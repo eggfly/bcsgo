@@ -27,7 +27,7 @@ func (this *Object) putUrl() string {
 func (this *Object) deleteUrl() string {
 	return this.bucket.bcs.simpleSign(DELETE, this.bucket.Name, this.AbsolutePath)
 }
-func (this *Object) PutFile(localFile string) (*Object, error) {
+func (this *Object) PutFile(localFile string, acl string) (*Object, error) {
 	link := this.putUrl()
 	file, err := os.Open(localFile)
 	if err != nil {
@@ -37,7 +37,13 @@ func (this *Object) PutFile(localFile string) (*Object, error) {
 	if err != nil {
 		return nil, err
 	}
-	resp, _, err := this.bucket.bcs.httpClient.Put(link, file, fileInfo.Size(), nil)
+	var modifyHeader func(header *http.Header) = nil
+	if acl != "" {
+		modifyHeader = func(header *http.Header) {
+			header.Set(HEADER_ACL, acl)
+		}
+	}
+	resp, _, err := this.bucket.bcs.httpClient.Put(link, file, fileInfo.Size(), modifyHeader)
 	if err != nil || resp.StatusCode != http.StatusOK {
 		return nil, err
 	} else {
