@@ -11,19 +11,19 @@ func Test(t *testing.T) {
 	url_ex := "http://bcs.duapp.com//?sign=MBO:vYlphQiwbhVz67jjW48ddY3C:yf27Oy6JVtK6nxRtIASKX6H%2BR4I%3D"
 	fmt.Println("test sign", url == url_ex)
 
-	newBucket := bcs.Bucket("testsml2")
-	bucketErr := newBucket.Create()
-	fmt.Println(bucketErr)
+	// newBucket := bcs.Bucket("testsml2")
+	// bucketErr := newBucket.Create()
+	// fmt.Println(bucketErr)
 
-	bucketErr = newBucket.Delete()
-	fmt.Println(bucketErr)
+	// bucketErr = newBucket.Delete()
+	// fmt.Println(bucketErr)
 
-	newBucket2 := bcs.Bucket("testErrorBucket")
-	bucketErr2 := newBucket2.Create()
-	fmt.Println(bucketErr2)
+	// newBucket2 := bcs.Bucket("testErrorBucket")
+	// bucketErr2 := newBucket2.Create()
+	// fmt.Println(bucketErr2)
 
-	b, e := bcs.ListBuckets()
-	fmt.Println(e)
+	// b, e := bcs.ListBuckets()
+	// fmt.Println(e)
 	// for _, pBucket := range b {
 	// 	fmt.Println(pBucket)
 	// 	o, e := pBucket.ListObjects("", 0, 5)
@@ -33,7 +33,11 @@ func Test(t *testing.T) {
 	// 	}
 	// }
 
-	testObj := b[0].Object("/testDir/test.txt")
+	bcssdk := bcs.Bucket("bcssdk")
+	acl, aclErr := bcssdk.GetACL()
+	fmt.Println("get acl:", acl, aclErr)
+	fmt.Println("put acl:", bcssdk.SetACL("public-read"))
+	testObj := bcssdk.Object("/testDir/test.txt")
 	testObj, err := testObj.PutFile("test.txt")
 	fmt.Println(testObj, err)
 

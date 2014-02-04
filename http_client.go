@@ -22,12 +22,15 @@ func (this *HttpClient) Get(url string) (*http.Response, []byte, error) {
 	respData, err := this.handleResponseContent(resp, err)
 	return resp, respData, err
 }
-func (this *HttpClient) Put(url string, data io.Reader, size int64) (*http.Response, []byte, error) {
+func (this *HttpClient) Put(url string, data io.Reader, size int64, modifyHeader func(header *http.Header)) (*http.Response, []byte, error) {
 	req, err := http.NewRequest(PUT, url, data)
 	if err != nil {
 		return nil, nil, err
 	}
 	req.ContentLength = size
+	if modifyHeader != nil {
+		modifyHeader(&req.Header)
+	}
 	this.dumpRequest(req)
 	old := time.Now()
 	resp, err := this.client.Do(req)

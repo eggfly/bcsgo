@@ -16,15 +16,21 @@ type Bucket struct {
 func (this *Bucket) getUrl() string {
 	return this.bcs.simpleSign(GET, this.Name, "/")
 }
+func (this *Bucket) getACLUrl() string {
+	return this.getUrl() + "&acl=1"
+}
 func (this *Bucket) putUrl() string {
 	return this.bcs.simpleSign(PUT, this.Name, "/")
+}
+func (this *Bucket) putACLUrl() string {
+	return this.putUrl() + "&acl=1"
 }
 func (this *Bucket) deleteUrl() string {
 	return this.bcs.simpleSign(DELETE, this.Name, "/")
 }
 func (this *Bucket) Create() error {
 	link := this.putUrl()
-	resp, _, err := this.bcs.httpClient.Put(link, nil, 0)
+	resp, _, err := this.bcs.httpClient.Put(link, nil, 0, nil)
 	if resp.StatusCode != http.StatusOK {
 		err = errors.New("request not ok, status: " + string(resp.StatusCode))
 	}
@@ -67,4 +73,17 @@ func (this *Bucket) ListObjects(prefix string, start, limit int) (*ObjectCollect
 			return &objectsInfo, nil
 		}
 	}
+}
+func (this *Bucket) GetACL() (string, error) {
+	link := this.getACLUrl()
+	_, data, err := this.bcs.httpClient.Get(link)
+	return string(data), err
+}
+func (this *Bucket) SetACL(acl string) error {
+	link := this.putACLUrl()
+	modifyHeader := func(header *http.Header) {
+		header.Set("x-bs-acl", acl)
+	}
+	_, _, err := this.bcs.httpClient.Put(link, nil, 0, modifyHeader)
+	return err
 }
