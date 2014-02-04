@@ -28,9 +28,21 @@ func (this *Bucket) putACLUrl() string {
 func (this *Bucket) deleteUrl() string {
 	return this.bcs.simpleSign(DELETE, this.Name, "/")
 }
+func (this *Bucket) CreateWithACL(acl string) error {
+	return this.createInner(acl)
+}
 func (this *Bucket) Create() error {
+	return this.createInner("")
+}
+func (this *Bucket) createInner(acl string) error {
 	link := this.putUrl()
-	resp, _, err := this.bcs.httpClient.Put(link, nil, 0, nil)
+	var modifyHeader func(*http.Header)
+	if acl != "" {
+		modifyHeader = func(header *http.Header) {
+			header.Set(HEADER_ACL, acl)
+		}
+	}
+	resp, _, err := this.bcs.httpClient.Put(link, nil, 0, modifyHeader)
 	if resp.StatusCode != http.StatusOK {
 		err = errors.New("request not ok, status: " + string(resp.StatusCode))
 	}
