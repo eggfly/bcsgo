@@ -49,18 +49,21 @@ func (this *HttpClient) Delete(url string) (*http.Response, []byte, error) {
 	return resp, respData, err
 }
 func (this *HttpClient) dumpRequest(req *http.Request) {
-	dump, dumpErr := httputil.DumpRequest(req, false)
-	log.Println(string(dump), dumpErr)
+	if DEBUG {
+		dump, dumpErr := httputil.DumpRequest(req, false)
+		log.Println(string(dump), dumpErr)
+	}
 }
 func (this *HttpClient) handleResponseContent(resp *http.Response, err error) ([]byte, error) {
-	dump, dumpErr := httputil.DumpResponse(resp, true)
-	log.Println(string(dump), dumpErr)
+	if DEBUG {
+		dump, dumpErr := httputil.DumpResponse(resp, true)
+		log.Println(string(dump), dumpErr)
+	}
 	if err != nil {
 		return nil, err
 	} else {
 		defer resp.Body.Close()
 		respData, err := ioutil.ReadAll(resp.Body)
-		log.Println(string(respData), err)
 		return respData, err
 	}
 }

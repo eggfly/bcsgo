@@ -18,3 +18,5 @@ const (
 const (
 	HEADER_ACL = "X-Bs-Acl"
 )
+
+var DEBUG bool = false
