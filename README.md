@@ -7,6 +7,8 @@ Golang Baidu BCS SDK
 
 Baidu Official BCS Doc: [http://developer.baidu.com/wiki/index.php?title=docs/cplat/bcs](http://developer.baidu.com/wiki/index.php?title=docs/cplat/bcs)
 
+使用示例: [bcs_test.go](bcs_test.go)
+
 后续想法:
 
 1. 基于此SDK的Go语言版本的免费云网盘客户端
