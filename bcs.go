@@ -33,16 +33,26 @@ func (this *BCS) ListBuckets() ([]*Bucket, error) {
 		return list, err
 	}
 }
-func (this *BCS) getUrl() string {
-	return this.simpleSign(GET, "", "/")
-}
 func (this *BCS) Bucket(bucketName string) *Bucket {
 	return &Bucket{this, bucketName}
 }
-func (this *BCS) simpleSign(m, b, o string) string {
-	return this.Sign(m, b, o, "", "", "")
+
+func (this *BCS) getUrl() string {
+	return this.restUrl(GET, "", "/")
 }
-func (this *BCS) Sign(m, b, o, t, i, s string) string {
+func (this *BCS) restUrl(method, bucket, object string) string {
+	return this.urlWithSign(method, bucket, object, "", "", "")
+}
+func (this *BCS) restUrlExtra(method, bucket, object, time, ip, size string) string {
+	return this.urlWithSign(method, bucket, object, time, ip, size)
+}
+func (this *BCS) urlWithSign(method, bucket, object, time, ip, size string) string {
+	return fmt.Sprintf("%s?sign=%s", this.urlWithoutSign(bucket, object), this.sign(method, bucket, object, time, ip, size))
+}
+func (this *BCS) urlWithoutSign(bucket, object string) string {
+	return fmt.Sprintf("%s/%s%s", BCS_HOST, bucket, "/"+url.QueryEscape(object[1:]))
+}
+func (this *BCS) sign(m, b, o, t, i, s string) string {
 	flag := ""
 	ss := ""
 	flag += "M"
@@ -74,23 +84,19 @@ func (this *BCS) Sign(m, b, o, t, i, s string) string {
 		return sign
 	}
 	sign := h(this.sk, ss)
-	url := fmt.Sprintf(
-		"%s/%s%s?sign=%s:%s:%s",
-		BCS_HOST,
-		b,
-		"/"+url.QueryEscape(o[1:]),
-		//url.QueryEscape(o),
+	final := fmt.Sprintf(
+		"%s:%s:%s",
 		flag,
 		this.ak,
 		sign)
 	if t != "" {
-		url += "&time=" + t
+		final += "&time=" + t
 	}
 	if i != "" {
-		url += "&ip=" + i
+		final += "&ip=" + i
 	}
 	if s != "" {
-		url += "&size=" + s
+		final += "&size=" + s
 	}
-	return url
+	return final
 }

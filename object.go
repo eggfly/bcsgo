@@ -21,11 +21,20 @@ type Object struct {
 	ContentMD5   string `json:"content_md5"`
 }
 
+func (this *Object) getUrl() string {
+	return this.bucket.bcs.restUrl(GET, this.bucket.Name, this.AbsolutePath)
+}
 func (this *Object) putUrl() string {
-	return this.bucket.bcs.simpleSign(PUT, this.bucket.Name, this.AbsolutePath)
+	return this.bucket.bcs.restUrl(PUT, this.bucket.Name, this.AbsolutePath)
 }
 func (this *Object) deleteUrl() string {
-	return this.bucket.bcs.simpleSign(DELETE, this.bucket.Name, this.AbsolutePath)
+	return this.bucket.bcs.restUrl(DELETE, this.bucket.Name, this.AbsolutePath)
+}
+func (this *Object) Link() string {
+	return this.getUrl()
+}
+func (this *Object) PublicLink() string {
+	return this.bucket.bcs.urlWithoutSign(this.bucket.Name, this.AbsolutePath)
 }
 func (this *Object) PutFile(localFile string, acl string) (*Object, error) {
 	link := this.putUrl()

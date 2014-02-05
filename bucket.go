@@ -14,19 +14,19 @@ type Bucket struct {
 }
 
 func (this *Bucket) getUrl() string {
-	return this.bcs.simpleSign(GET, this.Name, "/")
+	return this.bcs.restUrl(GET, this.Name, "/")
 }
 func (this *Bucket) getACLUrl() string {
 	return this.getUrl() + "&acl=1"
 }
 func (this *Bucket) putUrl() string {
-	return this.bcs.simpleSign(PUT, this.Name, "/")
+	return this.bcs.restUrl(PUT, this.Name, "/")
 }
 func (this *Bucket) putACLUrl() string {
 	return this.putUrl() + "&acl=1"
 }
 func (this *Bucket) deleteUrl() string {
-	return this.bcs.simpleSign(DELETE, this.Name, "/")
+	return this.bcs.restUrl(DELETE, this.Name, "/")
 }
 func (this *Bucket) CreateWithACL(acl string) error {
 	return this.createInner(acl)
