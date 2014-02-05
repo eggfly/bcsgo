@@ -57,6 +57,9 @@ func (this *Bucket) Delete() error {
 	return err
 }
 func (this *Bucket) Object(absolutePath string) *Object {
+	if absolutePath[0] != '/' {
+		panic("object name (aka absolute path) must start with '/'")
+	}
 	o := Object{}
 	o.bucket = this
 	o.AbsolutePath = absolutePath
