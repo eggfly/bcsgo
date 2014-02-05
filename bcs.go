@@ -51,6 +51,7 @@ func (this *BCS) urlWithSign(method, bucket, object, time, ip, size string) stri
 }
 func (this *BCS) urlWithoutSign(bucket, object string) string {
 	return fmt.Sprintf("%s/%s%s", BCS_HOST, bucket, "/"+url.QueryEscape(object[1:]))
+	// return fmt.Sprintf("%s/%s%s", BCS_HOST, bucket, "/"+object[1:])
 }
 func (this *BCS) sign(m, b, o, t, i, s string) string {
 	flag := ""

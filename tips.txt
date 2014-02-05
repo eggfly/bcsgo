@@ -1,8 +1,8 @@
 list objects with prefix
-acl of buckets and objects
+ok: acl of buckets and objects
 post to upload object
 superfile and superfile2
-
+bucket name or file name with blank
 
 
 create objects with dir will create all dirs

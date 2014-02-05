@@ -1,7 +1,7 @@
 package bcsgo
 
 import (
-	// "fmt"
+	"fmt"
 	"strconv"
 	"testing"
 	"time"
@@ -113,8 +113,9 @@ func TestBucketACL(t *testing.T) {
 }
 
 func TestPutAndDeleteObject(t *testing.T) {
+	// todo file name with blank char
 	bucket := bcs.Bucket(sessionBucketName)
-	path := "/testDir/test.txt"
+	path := "/testDir/testwithblank.txt"
 	testObj := bucket.Object(path)
 	testObj, err := testObj.PutFile("test.txt", ACL_PUBLIC_READ)
 	if err != nil {
@@ -122,6 +123,12 @@ func TestPutAndDeleteObject(t *testing.T) {
 	}
 	if testObj.AbsolutePath != path {
 		t.Error("testObj.AbsolutePath != path", testObj.AbsolutePath, path)
+	}
+
+	expectedPublicLink := fmt.Sprintf("%s/%s%s", BCS_HOST, sessionBucketName, path)
+	publicLink := testObj.PublicLink()
+	if expectedPublicLink != publicLink {
+		t.Error("expectedPublicLink != publicLink", expectedPublicLink, publicLink)
 	}
 
 	deleteErr := testObj.Delete()
