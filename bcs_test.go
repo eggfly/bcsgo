@@ -1,7 +1,7 @@
 package bcsgo
 
 import (
-	"fmt"
+	// "fmt"
 	"strconv"
 	"testing"
 	"time"
@@ -34,8 +34,7 @@ func TestSimpleCreateBucket(t *testing.T) {
 	newBucket := bcs.Bucket(sessionBucketName)
 	err := newBucket.Create()
 	if err != nil {
-		fmt.Println(err)
-		t.Fail()
+		t.Error(err)
 	}
 }
 
@@ -44,8 +43,7 @@ func TestNewAndDeleteBucketAndACL(t *testing.T) {
 	newBucket := bcs.Bucket(bucketName)
 	bucketErr := newBucket.CreateWithACL(ACL_PUBLIC_READ)
 	if bucketErr != nil {
-		fmt.Println(bucketErr)
-		t.Fail()
+		t.Error(bucketErr)
 	}
 
 	// bucketACL, bucketACLErr := newBucket.GetACL()
@@ -62,8 +60,7 @@ func TestNewAndDeleteBucketAndACL(t *testing.T) {
 
 	bucketErr = newBucket.Delete()
 	if bucketErr != nil {
-		fmt.Println(bucketErr)
-		t.Fail()
+		t.Error(bucketErr)
 	}
 }
 
@@ -72,17 +69,17 @@ func TestNewBucketWithInvalidName(t *testing.T) {
 	bucketErr := newBucket.Create()
 	// It shall be failed.
 	if bucketErr == nil {
-		t.Fail()
+		t.Error("create bucket with invaid name should failed")
 	}
 }
 
 func TestListBuckets(t *testing.T) {
 	buckets, e := bcs.ListBuckets()
 	if e != nil {
-		t.Fail()
+		t.Error(e)
 	}
 	if buckets == nil {
-		t.Fail()
+		t.Error("buckets list is nil")
 	}
 }
 
@@ -91,11 +88,11 @@ func TestListObjects(t *testing.T) {
 	bucket := bcs.Bucket(sessionBucketName)
 	objects, e := bucket.ListObjects("", 0, 5)
 	if e != nil {
-		t.Fail()
+		t.Error("object list shouldn't be nil")
 	}
 	for _, pObject := range objects.Objects {
 		if pObject == nil {
-			t.Fail()
+			t.Error("object should not be nil")
 		}
 	}
 }
@@ -103,12 +100,15 @@ func TestListObjects(t *testing.T) {
 func TestBucketACL(t *testing.T) {
 	bucket := bcs.Bucket(sessionBucketName)
 	acl, aclErr := bucket.GetACL()
-	if aclErr != nil || acl == "" {
-		t.Fail()
+	if aclErr != nil {
+		t.Error(aclErr)
+	}
+	if acl == "" {
+		t.Error("acl string shouldn't be nil")
 	}
 	putErr := bucket.SetACL(ACL_PUBLIC_READ)
 	if putErr != nil {
-		t.Fail()
+		t.Error(putErr)
 	}
 }
 
@@ -117,13 +117,16 @@ func TestPutAndDeleteObject(t *testing.T) {
 	path := "/testDir/test.txt"
 	testObj := bucket.Object(path)
 	testObj, err := testObj.PutFile("test.txt", ACL_PUBLIC_READ)
-	if (err != nil) || testObj.AbsolutePath != path {
-		t.Fail()
+	if err != nil {
+		t.Error(err)
+	}
+	if testObj.AbsolutePath != path {
+		t.Error("testObj.AbsolutePath != path", testObj.AbsolutePath, path)
 	}
 
 	deleteErr := testObj.Delete()
 	if deleteErr != nil {
-		t.Fail()
+		t.Error(deleteErr)
 	}
 }
 
@@ -131,6 +134,6 @@ func TestFinallyDeleteSessionBucket(t *testing.T) {
 	bucket := bcs.Bucket(sessionBucketName)
 	err := bucket.Delete()
 	if err != nil {
-		t.Fail()
+		t.Error(err)
 	}
 }
