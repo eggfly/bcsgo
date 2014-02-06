@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 type Bucket struct {
@@ -44,7 +45,7 @@ func (this *Bucket) createInner(acl string) error {
 	}
 	resp, _, err := this.bcs.httpClient.Put(link, nil, 0, modifyHeader)
 	if resp.StatusCode != http.StatusOK {
-		err = errors.New("request not ok, status: " + string(resp.StatusCode))
+		err = errors.New("request not ok, status: " + strconv.Itoa(resp.StatusCode))
 	}
 	return err
 }
@@ -52,7 +53,7 @@ func (this *Bucket) Delete() error {
 	link := this.deleteUrl()
 	resp, _, err := this.bcs.httpClient.Delete(link)
 	if resp.StatusCode != http.StatusOK {
-		err = errors.New("request not ok, status: " + string(resp.StatusCode))
+		err = errors.New("request not ok, status: " + strconv.Itoa(resp.StatusCode))
 	}
 	return err
 }

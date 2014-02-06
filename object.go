@@ -66,7 +66,7 @@ func (this *Object) Delete() error {
 	link := this.deleteUrl()
 	resp, _, err := this.bucket.bcs.httpClient.Delete(link)
 	if resp.StatusCode != http.StatusOK {
-		err = errors.New("request not ok, status: " + string(resp.StatusCode))
+		err = errors.New("request not ok, status: " + strconv.Itoa(resp.StatusCode))
 	}
 	return err
 }
