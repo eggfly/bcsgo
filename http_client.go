@@ -18,41 +18,49 @@ func NewHttpClient() *HttpClient {
 }
 
 func (this *HttpClient) Get(url string) (*http.Response, []byte, error) {
-	resp, err := this.client.Get(url)
-	respData, err := this.handleResponseContent(resp, err)
-	return resp, respData, err
+	return this.createAndDoRequestForResult(GET, url, nil, nil)
 }
 func (this *HttpClient) Put(url string, data io.Reader, size int64, modifyHeader func(header *http.Header)) (*http.Response, []byte, error) {
-	req, err := http.NewRequest(PUT, url, data)
-	if err != nil {
-		return nil, nil, err
+	customRequest := func(req *http.Request) {
+		req.ContentLength = size
+		if modifyHeader != nil {
+			modifyHeader(&req.Header)
+		}
 	}
-	req.ContentLength = size
-	if modifyHeader != nil {
-		modifyHeader(&req.Header)
-	}
-	this.dumpRequest(req)
-	old := time.Now()
-	resp, err := this.client.Do(req)
-	log.Println(time.Now().Sub(old))
-	respData, err := this.handleResponseContent(resp, err)
-	return resp, respData, err
+	return this.createAndDoRequestForResult(PUT, url, data, customRequest)
+}
+func (this *HttpClient) Head(url string) (*http.Response, []byte, error) {
+	return this.createAndDoRequestForResult(HEAD, url, nil, nil)
 }
 func (this *HttpClient) Delete(url string) (*http.Response, []byte, error) {
-	req, err := http.NewRequest(DELETE, url, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-	this.dumpRequest(req)
-	resp, err := this.client.Do(req)
-	respData, err := this.handleResponseContent(resp, err)
-	return resp, respData, err
+	return this.createAndDoRequestForResult(DELETE, url, nil, nil)
 }
 func (this *HttpClient) dumpRequest(req *http.Request) {
 	if DEBUG {
 		dump, dumpErr := httputil.DumpRequest(req, false)
 		log.Println(string(dump), dumpErr)
 	}
+}
+func (this *HttpClient) createAndDoRequestForResult(method string, url string, data io.Reader, customRequest func(*http.Request)) (*http.Response, []byte, error) {
+	req, err := http.NewRequest(method, url, data)
+	if err != nil {
+		return nil, nil, err
+	}
+	if customRequest != nil {
+		customRequest(req)
+	}
+	this.dumpRequest(req)
+
+	var oldTime time.Time
+	if DEBUG {
+		oldTime = time.Now()
+	}
+	resp, err := this.client.Do(req)
+	if DEBUG {
+		log.Println(time.Now().Sub(oldTime))
+	}
+	respData, err := this.handleResponseContent(resp, err)
+	return resp, respData, err
 }
 func (this *HttpClient) handleResponseContent(resp *http.Response, err error) ([]byte, error) {
 	if DEBUG {

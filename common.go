@@ -4,6 +4,7 @@ const (
 	GET    = "GET"
 	POST   = "POST"
 	PUT    = "PUT"
+	HEAD   = "HEAD"
 	DELETE = "DELETE"
 )
 

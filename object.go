@@ -36,6 +36,9 @@ func (this *Object) Link() string {
 func (this *Object) PublicLink() string {
 	return this.bucket.bcs.urlWithoutSign(this.bucket.Name, this.AbsolutePath)
 }
+func (this *Object) Head() error {
+	return nil
+}
 func (this *Object) PutFile(localFile string, acl string) (*Object, error) {
 	link := this.putUrl()
 	file, err := os.Open(localFile)
