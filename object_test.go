@@ -10,8 +10,8 @@ import (
 var bucketForObjectTest *Bucket
 
 const (
-	_1MB_NAME  = "1MB.data"
-	_TEST_NAME = "test.txt"
+	_LARGER_NAME = "256KB.data"
+	_TEST_NAME   = "test.txt"
 )
 
 func createTestFile(filename string, size int) {
@@ -27,7 +27,7 @@ func TestObjectInit(t *testing.T) {
 	bucket := createBucketTempForTest(t)
 	bucketForObjectTest = bucket
 
-	createTestFile(_1MB_NAME, 1*1024*1024)
+	createTestFile(_LARGER_NAME, 256*1024)
 	createTestFile(_TEST_NAME, 1024)
 }
 
@@ -64,10 +64,10 @@ func TestObjectPutAndDeleteObject(t *testing.T) {
 	}
 }
 
-func TestObjectLargeSingleFile(t *testing.T) {
+func TestObjectLargerSingleFile(t *testing.T) {
 	bucket := bucketForObjectTest
-	obj := bucket.Object("/1MB.data")
-	obj, err := obj.PutFile(_1MB_NAME)
+	obj := bucket.Object("/larger.data")
+	obj, err := obj.PutFile(_LARGER_NAME)
 	if err != nil {
 		t.Error(err)
 	}
@@ -80,6 +80,6 @@ func TestObjectLargeSingleFile(t *testing.T) {
 func TestObjectFinalize(t *testing.T) {
 	deleteBucketForTest(t, bucketForObjectTest)
 	bucketForObjectTest = nil
-	deleteTestFile(_1MB_NAME)
+	deleteTestFile(_LARGER_NAME)
 	deleteTestFile(_TEST_NAME)
 }
