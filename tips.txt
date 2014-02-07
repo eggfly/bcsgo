@@ -2,6 +2,7 @@ copy and move objects
 list objects with prefix
 post to upload object
 bucket name or file name with blank
+more test of ACL
 ok: acl of buckets and objects
 ok: superfile
 
