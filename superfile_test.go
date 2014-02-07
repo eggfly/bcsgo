@@ -16,7 +16,6 @@ func TestSuperfileInit(t *testing.T) {
 }
 
 func TestSuperfilePutAndDelete(t *testing.T) {
-	DEBUG = true
 	bucket := bucketForSuperfileTest
 	// todo file name with blank char
 	putFile := func(path, localFile string) *Object {
