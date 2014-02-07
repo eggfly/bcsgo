@@ -11,12 +11,11 @@ func TestSuperfileInit(t *testing.T) {
 	bucket := createBucketTempForTest(t)
 	bucketForSuperfileTest = bucket
 
-	createTestFile(_TEST_NAME, 1024)
+	createTestFile(_TEST_NAME, 1*1024*1024)
 }
 
 func TestSuperfilePutAndDelete(t *testing.T) {
 	DEBUG = true
-	DEBUG_REQUEST_BODY = true
 	bucket := bucketForSuperfileTest
 	// todo file name with blank char
 	putFile := func(path, localFile string) *Object {
@@ -36,16 +35,22 @@ func TestSuperfilePutAndDelete(t *testing.T) {
 			t.Error(deleteErr)
 		}
 	}
-	obj1 := putFile("/testDir/part1.txt", _TEST_NAME)
-	obj2 := putFile("/testDir/part2.txt", _TEST_NAME)
-	s := bucket.Superfile("/testDir/merged.txt", []*Object{obj1, obj2})
-	err := s.Put()
-	if err != nil {
-		t.Error(err)
+	dupFileTimes := func(absPath string, obj *Object, times int) *Superfile {
+		repeats := make([]*Object, 0)
+		for i := 0; i < times; i++ {
+			repeats = append(repeats, obj)
+		}
+		s := bucket.Superfile(absPath, repeats)
+		err := s.Put()
+		if err != nil {
+			t.Error(err)
+		}
+		return s
 	}
+	obj := putFile("/testDir/test.txt", _TEST_NAME)
+	// DEBUG_REQUEST_BODY = true
+	s := dupFileTimes("/testDir/test.txt", obj, 1024)
 
-	deleteFile(obj1)
-	deleteFile(obj2)
 	deleteFile(&s.Object)
 }
 
