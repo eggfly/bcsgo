@@ -46,8 +46,8 @@ func (this *Object) Head() error {
 		return err
 	} else {
 		this.Size = resp.ContentLength
-		this.ContentMD5 = resp.Header.Get("Content-Md5")
-		this.VersionKey = resp.Header.Get("X-Bs-Version")
+		this.ContentMD5 = resp.Header.Get(HEADER_CONTENT_MD5)
+		this.VersionKey = resp.Header.Get(HEADER_VERSION)
 		return nil
 	}
 }
@@ -78,9 +78,9 @@ func (this *Object) putFileInner(localFile string, acl string) (*Object, error) 
 	if err != nil {
 		return nil, err
 	} else {
-		this.ContentMD5 = resp.Header.Get("Content-Md5")
-		this.VersionKey = resp.Header.Get("X-Bs-Version") // TODO check version json and this
-		this.Size, _ = strconv.ParseInt(resp.Header.Get("X-Bs-File-Size"), 10, 64)
+		this.ContentMD5 = resp.Header.Get(HEADER_CONTENT_MD5)
+		this.VersionKey = resp.Header.Get(HEADER_VERSION) // TODO check version json and this
+		this.Size, _ = strconv.ParseInt(resp.Header.Get(HEADER_FILESIZE), 10, 64)
 		return this, err
 	}
 }

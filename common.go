@@ -21,7 +21,11 @@ const (
 )
 
 const (
-	HEADER_ACL = "X-Bs-Acl"
+	HEADER_ACL         = "X-Bs-Acl"
+	HEADER_VERSION     = "X-Bs-Version"
+	HEADER_FILESIZE    = "X-Bs-File-Size"
+	HEADER_ETAG        = "Etag"
+	HEADER_CONTENT_MD5 = "Content-Md5"
 )
 
 var DEBUG bool = false

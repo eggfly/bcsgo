@@ -27,8 +27,8 @@ func (this *Superfile) Put() error {
 	reader := strings.NewReader(meta)
 	resp, _, err := this.bucket.bcs.httpClient.Put(link, reader, int64(len(meta)), nil)
 	if err == nil {
-		this.ContentMD5 = resp.Header.Get("Etag")
-		this.VersionKey = resp.Header.Get("X-Bs-Version")
+		this.ContentMD5 = resp.Header.Get(HEADER_ETAG)
+		this.VersionKey = resp.Header.Get(HEADER_VERSION)
 	}
 	return err
 }
