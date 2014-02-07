@@ -66,6 +66,16 @@ func (this *Bucket) Object(absolutePath string) *Object {
 	o.AbsolutePath = absolutePath
 	return &o
 }
+func (this *Bucket) Superfile(absolutePath string, objects []*Object) *Superfile {
+	if absolutePath[0] != '/' {
+		panic("object name (aka absolute path) must start with '/'")
+	}
+	s := Superfile{}
+	s.bucket = this
+	s.AbsolutePath = absolutePath
+	s.Objects = objects
+	return &s
+}
 
 func (this *Bucket) ListObjects(prefix string, start, limit int) (*ObjectCollection, error) {
 	params := url.Values{}

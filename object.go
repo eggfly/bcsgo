@@ -3,6 +3,7 @@ package bcsgo
 import (
 	// "encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -60,7 +61,7 @@ func (this *Object) PutFile(localFile string, acl string) (*Object, error) {
 		return nil, err
 	} else {
 		this.ContentMD5 = resp.Header["Content-Md5"][0]
-		this.VersionKey = resp.Header["X-Bs-Version"][0]
+		this.VersionKey = resp.Header["X-Bs-Version"][0] // TODO check version json and this
 		this.Size, _ = strconv.ParseUint(resp.Header["X-Bs-File-Size"][0], 10, 64)
 		return this, err
 	}
@@ -72,4 +73,7 @@ func (this *Object) Delete() error {
 		err = errors.New("request not ok, status: " + strconv.Itoa(resp.StatusCode))
 	}
 	return err
+}
+func (this *Object) refStr() string {
+	return fmt.Sprintf(`bs://%s%s`, this.bucket.Name, this.AbsolutePath)
 }

@@ -37,7 +37,7 @@ func (this *HttpClient) Delete(url string) (*http.Response, []byte, error) {
 }
 func (this *HttpClient) dumpRequest(req *http.Request) {
 	if DEBUG {
-		dump, dumpErr := httputil.DumpRequest(req, false)
+		dump, dumpErr := httputil.DumpRequest(req, DEBUG_REQUEST_BODY)
 		log.Println(string(dump), dumpErr)
 	}
 }

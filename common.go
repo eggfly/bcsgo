@@ -21,3 +21,4 @@ const (
 )
 
 var DEBUG bool = false
+var DEBUG_REQUEST_BODY = false
