@@ -39,8 +39,12 @@ func (this *HttpClient) Delete(url string) (*http.Response, []byte, error) {
 }
 func (this *HttpClient) dumpRequest(req *http.Request) {
 	if DEBUG {
-		dump, dumpErr := httputil.DumpRequest(req, DEBUG_REQUEST_BODY)
-		log.Println(string(dump), dumpErr)
+		dump, dumpErr := httputil.DumpRequestOut(req, DEBUG_REQUEST_BODY)
+		if dumpErr != nil {
+			log.Println("error when dump request:", dumpErr)
+		}
+		log.Println("*** request dump ***")
+		log.Println(string(dump))
 	}
 }
 func (this *HttpClient) createAndDoRequestForResult(method string, url string, data io.Reader, customRequest func(*http.Request)) (*http.Response, []byte, error) {
@@ -67,7 +71,11 @@ func (this *HttpClient) createAndDoRequestForResult(method string, url string, d
 func (this *HttpClient) handleResponseContent(resp *http.Response, err error) ([]byte, error) {
 	if DEBUG {
 		dump, dumpErr := httputil.DumpResponse(resp, true)
-		log.Println(string(dump), dumpErr)
+		if dumpErr != nil {
+			log.Println("error when dump response:", dumpErr)
+		}
+		log.Println("*** response dump ***")
+		log.Println(string(dump))
 	}
 	if err != nil {
 		return nil, err
