@@ -88,7 +88,6 @@ func (this *Bucket) ListObjects(prefix string, start, limit int) (*ObjectCollect
 	} else {
 		var objectsInfo ObjectCollection
 		err := json.Unmarshal(data, &objectsInfo)
-		fmt.Println(objectsInfo)
 		if err != nil {
 			return nil, err
 		} else {
