@@ -13,7 +13,11 @@ const (
 )
 
 const (
-	ACL_PUBLIC_READ = "public-read"
+	ACL_PRIVATE           = "private"
+	ACL_PUBLIC_READ       = "public-read"
+	ACL_PUBLIC_WRITE      = "public-write"
+	ACL_PUBLIC_READ_WRITE = "public-read-write"
+	ACL_PUBLIC_CONTROL    = "public-control"
 )
 
 const (

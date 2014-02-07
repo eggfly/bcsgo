@@ -89,10 +89,19 @@ func TestBucketACL(t *testing.T) {
 	if acl == "" {
 		t.Error("acl string shouldn't be nil")
 	}
-	putErr := bucket.SetACL(ACL_PUBLIC_READ)
-	if putErr != nil {
-		t.Error(putErr)
+
+	setACLCheckError := func(acl string) {
+		putErr := bucket.SetACL(acl)
+		if putErr != nil {
+			t.Error(putErr)
+		}
 	}
+
+	setACLCheckError(ACL_PUBLIC_CONTROL)
+	setACLCheckError(ACL_PUBLIC_READ)
+	setACLCheckError(ACL_PUBLIC_WRITE)
+	setACLCheckError(ACL_PUBLIC_READ_WRITE)
+	setACLCheckError(ACL_PRIVATE)
 
 	deleteBucketForTest(t, bucket)
 }

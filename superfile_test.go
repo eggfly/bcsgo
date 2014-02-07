@@ -20,7 +20,7 @@ func TestSuperfilePutAndDelete(t *testing.T) {
 	// todo file name with blank char
 	putFile := func(path, localFile string) *Object {
 		testObj := bucket.Object(path)
-		testObj, err := testObj.PutFile(localFile, ACL_PUBLIC_READ)
+		testObj, err := testObj.PutFile(localFile)
 		if err != nil {
 			t.Error(err)
 		}

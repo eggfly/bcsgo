@@ -1,11 +1,13 @@
 package bcsgo
 
 import (
+	"errors"
 	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httputil"
+	"strconv"
 	"time"
 )
 
@@ -70,8 +72,31 @@ func (this *HttpClient) handleResponseContent(resp *http.Response, err error) ([
 	if err != nil {
 		return nil, err
 	} else {
-		defer resp.Body.Close()
-		respData, err := ioutil.ReadAll(resp.Body)
-		return respData, err
+		return readAllResponseBodyWithError(resp)
 	}
+}
+
+func mergeResponseError(err error, resp *http.Response) error {
+	if err != nil {
+		return err
+	} else if resp.StatusCode != http.StatusOK {
+		return errors.New("request not ok, status: " + strconv.Itoa(resp.StatusCode) +
+			", body: " + string(readAllResponseBodyIgnoreError(resp)))
+	} else {
+		return nil
+	}
+}
+
+func readAllResponseBodyIgnoreError(resp *http.Response) []byte {
+	respData, _ := readAllResponseBodyWithError(resp)
+	return respData
+}
+
+func readAllResponseBodyWithError(resp *http.Response) ([]byte, error) {
+	// defer resp.Body.Close()
+	respData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Println(err)
+	}
+	return respData, err
 }

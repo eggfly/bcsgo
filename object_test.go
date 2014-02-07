@@ -36,7 +36,7 @@ func TestObjectPutAndDeleteObject(t *testing.T) {
 	// todo file name with blank char
 	path := "/testDir/testwithblank.txt"
 	testObj := bucket.Object(path)
-	testObj, err := testObj.PutFile(_TEST_NAME, ACL_PUBLIC_READ)
+	testObj, err := testObj.PutFileWithACL(_TEST_NAME, ACL_PUBLIC_READ)
 	if err != nil {
 		t.Error(err)
 	}
@@ -50,6 +50,14 @@ func TestObjectPutAndDeleteObject(t *testing.T) {
 	// 	t.Error("expectedPublicLink != publicLink", expectedPublicLink, publicLink)
 	// }
 
+	headErr := testObj.Head()
+	if headErr != nil {
+		t.Error(headErr)
+	}
+	if testObj.ContentMD5 == "" || testObj.VersionKey == "" {
+		t.Error("Info after HEAD is not ok!")
+	}
+
 	deleteErr := testObj.Delete()
 	if deleteErr != nil {
 		t.Error(deleteErr)
@@ -59,7 +67,7 @@ func TestObjectPutAndDeleteObject(t *testing.T) {
 func TestObjectLargeSingleFile(t *testing.T) {
 	bucket := bucketForObjectTest
 	obj := bucket.Object("/1MB.data")
-	obj, err := obj.PutFile(_1MB_NAME, "")
+	obj, err := obj.PutFile(_1MB_NAME)
 	if err != nil {
 		t.Error(err)
 	}

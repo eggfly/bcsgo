@@ -2,10 +2,8 @@ package bcsgo
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 	"net/url"
-	"strconv"
 )
 
 type Bucket struct {
@@ -43,18 +41,12 @@ func (this *Bucket) createInner(acl string) error {
 		}
 	}
 	resp, _, err := this.bcs.httpClient.Put(link, nil, 0, modifyHeader)
-	if resp.StatusCode != http.StatusOK {
-		err = errors.New("request not ok, status: " + strconv.Itoa(resp.StatusCode))
-	}
-	return err
+	return mergeResponseError(err, resp)
 }
 func (this *Bucket) Delete() error {
 	link := this.deleteUrl()
 	resp, _, err := this.bcs.httpClient.Delete(link)
-	if resp.StatusCode != http.StatusOK {
-		err = errors.New("request not ok, status: " + strconv.Itoa(resp.StatusCode))
-	}
-	return err
+	return mergeResponseError(err, resp)
 }
 func (this *Bucket) Object(absolutePath string) *Object {
 	if absolutePath[0] != '/' {
@@ -75,7 +67,6 @@ func (this *Bucket) Superfile(absolutePath string, objects []*Object) *Superfile
 	s.Objects = objects
 	return &s
 }
-
 func (this *Bucket) ListObjects(prefix string, start, limit int) (*ObjectCollection, error) {
 	params := url.Values{}
 	params.Set("start", string(start))
