@@ -3,6 +3,7 @@ package bcsgo
 import (
 	// "fmt"
 	"testing"
+	"time"
 )
 
 var bucketForSuperfileTest *Bucket
@@ -55,6 +56,7 @@ func TestSuperfilePutAndDelete(t *testing.T) {
 }
 
 func TestSuperfileFinalize(t *testing.T) {
+	time.Sleep(time.Second)
 	deleteBucketForTest(t, bucketForSuperfileTest)
 	bucketForSuperfileTest = nil
 	deleteTestFile(_TEST_NAME)
