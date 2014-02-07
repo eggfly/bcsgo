@@ -95,5 +95,4 @@ func TestBucketACL(t *testing.T) {
 	}
 
 	deleteBucketForTest(t, bucket)
-	t.Fail()
 }
