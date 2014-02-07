@@ -24,3 +24,5 @@ _testmain.go
 baidu-bcs-sdk-go
 bcs-go
 test.txt
+coverage.out
+cover.html

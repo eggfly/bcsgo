@@ -83,7 +83,6 @@ func (this *Bucket) ListObjects(prefix string, start, limit int) (*ObjectCollect
 	params.Set("limit", string(limit))
 	link := this.getUrl() + "&" + params.Encode()
 	_, data, err := this.bcs.httpClient.Get(link)
-	fmt.Println(string(data))
 	if err != nil {
 		return nil, err
 	} else {
