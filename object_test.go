@@ -1,6 +1,7 @@
 package bcsgo
 
 import (
+	"fmt"
 	"os"
 	"strings"
 	"testing"
@@ -31,7 +32,7 @@ func TestObjectInit(t *testing.T) {
 	createTestFile(_TEST_NAME, 1024)
 }
 
-func TestObjectPutAndDeleteObject(t *testing.T) {
+func TestObjectPutAndListAndHeadAndDeleteObject(t *testing.T) {
 	bucket := bucketForObjectTest
 	// todo file name with blank char
 	path := "/testDir/testwithblank.txt"
@@ -57,6 +58,27 @@ func TestObjectPutAndDeleteObject(t *testing.T) {
 	if testObj.ContentMD5 == "" || testObj.VersionKey == "" {
 		t.Error("Info after HEAD is not ok!")
 	}
+
+	listObjectsTest := func(prefix string, start, limit, expectedCount int) {
+		objects, e := bucket.ListObjects(prefix, start, limit)
+		if e != nil {
+			t.Error("object list shouldn't be nil")
+		}
+		for _, pObject := range objects.Objects {
+			if pObject == nil {
+				t.Error("object should not be nil")
+			}
+		}
+		resultCount := len(objects.Objects)
+		if expectedCount != resultCount {
+			t.Error(fmt.Sprintf(`expectedCount != result, expectedCount = %d, resultCount = %d`, expectedCount, resultCount))
+		}
+	}
+
+	listObjectsTest("", 0, 100, 1)
+	listObjectsTest("/", 1, 200, 0)
+	listObjectsTest("/testDir/testwithblank.txt", 0, 1, 1)
+	listObjectsTest("/testDir/testwithblank.txt!", 0, 2, 0)
 
 	deleteErr := testObj.Delete()
 	if deleteErr != nil {

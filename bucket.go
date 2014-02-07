@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 type Bucket struct {
@@ -69,8 +70,11 @@ func (this *Bucket) Superfile(absolutePath string, objects []*Object) *Superfile
 }
 func (this *Bucket) ListObjects(prefix string, start, limit int) (*ObjectCollection, error) {
 	params := url.Values{}
-	params.Set("start", string(start))
-	params.Set("limit", string(limit))
+	params.Set("start", strconv.Itoa(start))
+	params.Set("limit", strconv.Itoa(limit))
+	if prefix != "" {
+		params.Set("prefix", prefix)
+	}
 	link := this.getUrl() + "&" + params.Encode()
 	_, data, err := this.bcs.httpClient.Get(link)
 	if err != nil {

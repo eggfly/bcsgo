@@ -62,23 +62,6 @@ func TestBucketCreateWithInvalidName(t *testing.T) {
 	}
 }
 
-func TestBucketListObjects(t *testing.T) {
-	bucket := createBucketTempForTest(t)
-
-	// todo prefix
-	objects, e := bucket.ListObjects("", 0, 5)
-	if e != nil {
-		t.Error("object list shouldn't be nil")
-	}
-	for _, pObject := range objects.Objects {
-		if pObject == nil {
-			t.Error("object should not be nil")
-		}
-	}
-
-	deleteBucketForTest(t, bucket)
-}
-
 func TestBucketACL(t *testing.T) {
 	bucket := createBucketTempForTest(t)
 
