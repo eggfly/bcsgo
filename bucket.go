@@ -90,7 +90,8 @@ func (this *Bucket) ListObjects(prefix string, start, limit int) (*ObjectCollect
 }
 func (this *Bucket) GetACL() (string, error) {
 	link := this.getACLUrl()
-	_, data, err := this.bcs.httpClient.Get(link)
+	resp, data, err := this.bcs.httpClient.Get(link)
+	err = mergeResponseError(err, resp)
 	return string(data), err
 }
 func (this *Bucket) SetACL(acl string) error {
@@ -98,6 +99,6 @@ func (this *Bucket) SetACL(acl string) error {
 	modifyHeader := func(header *http.Header) {
 		header.Set(HEADER_ACL, acl)
 	}
-	_, _, err := this.bcs.httpClient.Put(link, nil, 0, modifyHeader)
-	return err
+	resp, _, err := this.bcs.httpClient.Put(link, nil, 0, modifyHeader)
+	return mergeResponseError(err, resp)
 }

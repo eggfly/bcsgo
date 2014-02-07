@@ -1,9 +1,5 @@
 package bcsgo
 
-import (
-// "fmt"
-)
-
 type ObjectCollection struct {
 	ObjectTotal int       `json:"object_total"`
 	Start       int       `json:"start"`

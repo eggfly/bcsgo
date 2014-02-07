@@ -26,6 +26,7 @@ func (this *Superfile) Put() error {
 	meta := fmt.Sprintf(`{"object_list": {%s}}`, partsStr)
 	reader := strings.NewReader(meta)
 	resp, _, err := this.bucket.bcs.httpClient.Put(link, reader, int64(len(meta)), nil)
+	err = mergeResponseError(err, resp)
 	if err == nil {
 		this.ContentMD5 = resp.Header.Get(HEADER_ETAG)
 		this.VersionKey = resp.Header.Get(HEADER_VERSION)

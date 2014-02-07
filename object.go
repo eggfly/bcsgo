@@ -23,8 +23,14 @@ type Object struct {
 func (this *Object) getUrl() string {
 	return this.bucket.bcs.restUrl(GET, this.bucket.Name, this.AbsolutePath)
 }
+func (this *Object) getACLUrl() string {
+	return this.getUrl() + "&acl=1"
+}
 func (this *Object) putUrl() string {
 	return this.bucket.bcs.restUrl(PUT, this.bucket.Name, this.AbsolutePath)
+}
+func (this *Object) putACLUrl() string {
+	return this.putUrl() + "&acl=1"
 }
 func (this *Object) headUrl() string {
 	return this.bucket.bcs.restUrl(HEAD, this.bucket.Name, this.AbsolutePath)
@@ -91,4 +97,18 @@ func (this *Object) Delete() error {
 }
 func (this *Object) refStr() string {
 	return fmt.Sprintf(`bs://%s%s`, this.bucket.Name, this.AbsolutePath)
+}
+func (this *Object) GetACL() (string, error) {
+	link := this.getACLUrl()
+	resp, data, err := this.bucket.bcs.httpClient.Get(link)
+	err = mergeResponseError(err, resp)
+	return string(data), err
+}
+func (this *Object) SetACL(acl string) error {
+	link := this.putACLUrl()
+	modifyHeader := func(header *http.Header) {
+		header.Set(HEADER_ACL, acl)
+	}
+	resp, _, err := this.bucket.bcs.httpClient.Put(link, nil, 0, modifyHeader)
+	return mergeResponseError(err, resp)
 }

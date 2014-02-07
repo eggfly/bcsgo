@@ -55,7 +55,7 @@ func TestSuperfilePutAndDelete(t *testing.T) {
 }
 
 func TestSuperfileFinalize(t *testing.T) {
-	time.Sleep(time.Second)
+	time.Sleep(500 * time.Millisecond)
 	deleteBucketForTest(t, bucketForSuperfileTest)
 	bucketForSuperfileTest = nil
 	deleteTestFile(_TEST_NAME)

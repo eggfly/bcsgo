@@ -1,10 +1,10 @@
 package bcsgo
 
 import (
-	// "fmt"
 	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 var bucketForObjectTest *Bucket
@@ -64,13 +64,35 @@ func TestObjectPutAndDeleteObject(t *testing.T) {
 	}
 }
 
-func TestObjectLargerSingleFile(t *testing.T) {
+func TestObjectLargerSingleFileAndACL(t *testing.T) {
 	bucket := bucketForObjectTest
 	obj := bucket.Object("/larger.data")
 	obj, err := obj.PutFile(_LARGER_NAME)
 	if err != nil {
 		t.Error(err)
 	}
+
+	acl, aclErr := obj.GetACL()
+	if aclErr != nil {
+		t.Error(aclErr)
+	}
+	if acl == "" {
+		t.Error("acl string shouldn't be nil")
+	}
+
+	setACLCheckError := func(acl string) {
+		putErr := obj.SetACL(acl)
+		if putErr != nil {
+			t.Error(putErr)
+		}
+	}
+
+	setACLCheckError(ACL_PUBLIC_CONTROL)
+	setACLCheckError(ACL_PUBLIC_READ)
+	setACLCheckError(ACL_PUBLIC_WRITE)
+	setACLCheckError(ACL_PUBLIC_READ_WRITE)
+	setACLCheckError(ACL_PRIVATE)
+
 	deleteErr := obj.Delete()
 	if deleteErr != nil {
 		t.Error(deleteErr)
@@ -78,6 +100,7 @@ func TestObjectLargerSingleFile(t *testing.T) {
 }
 
 func TestObjectFinalize(t *testing.T) {
+	time.Sleep(500 * time.Millisecond)
 	deleteBucketForTest(t, bucketForObjectTest)
 	bucketForObjectTest = nil
 	deleteTestFile(_LARGER_NAME)
