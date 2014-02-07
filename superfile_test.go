@@ -12,7 +12,7 @@ func TestSuperfileInit(t *testing.T) {
 	bucket := createBucketTempForTest(t)
 	bucketForSuperfileTest = bucket
 
-	createTestFile(_TEST_NAME, 1*1024*1024)
+	createTestFile(_TEST_NAME, 256*1024)
 }
 
 func TestSuperfilePutAndDelete(t *testing.T) {
