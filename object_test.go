@@ -86,8 +86,9 @@ func TestObjectPutAndListAndHeadAndDeleteObject(t *testing.T) {
 	}
 }
 
-func TestObjectLargerSingleFileAndACL(t *testing.T) {
+func TestObjectLargerSingleFileAndACLAndCopy(t *testing.T) {
 	bucket := bucketForObjectTest
+
 	obj := bucket.Object("/larger.data")
 	obj, err := obj.PutFile(_LARGER_NAME)
 	if err != nil {
@@ -115,10 +116,29 @@ func TestObjectLargerSingleFileAndACL(t *testing.T) {
 	setACLCheckError(ACL_PUBLIC_READ_WRITE)
 	setACLCheckError(ACL_PRIVATE)
 
-	deleteErr := obj.Delete()
-	if deleteErr != nil {
-		t.Error(deleteErr)
+	dupObject := bucket.Object("/larger2.data")
+	dupObject, copyErr := obj.CopyTo(dupObject)
+	if copyErr != nil {
+		t.Error(copyErr)
 	}
+	if dupObject.Size != obj.Size {
+		t.Error("object size after copy exists differences")
+		t.Log(dupObject, obj)
+	}
+	// if dupObject.ContentMD5 != obj.ContentMD5 {
+	// 	t.Error("object md5 after copy exists differences")
+	// 	t.Log(dupObject, obj)
+	// }
+
+	deleteObject := func(obj *Object) {
+		deleteErr := obj.Delete()
+		if deleteErr != nil {
+			t.Error(deleteErr)
+		}
+	}
+
+	deleteObject(obj)
+	deleteObject(dupObject)
 }
 
 func TestObjectFinalize(t *testing.T) {

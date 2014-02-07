@@ -21,6 +21,7 @@ const (
 )
 
 const (
+	HEADER_COPY_SOURCE = "x-bs-copy-source"
 	HEADER_ACL         = "X-Bs-Acl"
 	HEADER_VERSION     = "X-Bs-Version"
 	HEADER_FILESIZE    = "X-Bs-File-Size"

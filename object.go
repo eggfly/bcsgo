@@ -112,3 +112,20 @@ func (this *Object) SetACL(acl string) error {
 	resp, _, err := this.bucket.bcs.httpClient.Put(link, nil, 0, modifyHeader)
 	return mergeResponseError(err, resp)
 }
+func (this *Object) CopyTo(target *Object) (*Object, error) {
+	// take care of this, target put url
+	link := target.putUrl()
+	modifyHeader := func(header *http.Header) {
+		header.Set(HEADER_COPY_SOURCE, this.refStr())
+	}
+	resp, _, err := this.bucket.bcs.httpClient.Put(link, nil, 0, modifyHeader)
+	err = mergeResponseError(err, resp)
+	if err != nil {
+		return nil, err
+	} else {
+		target.ContentMD5 = resp.Header.Get(HEADER_CONTENT_MD5)
+		target.VersionKey = resp.Header.Get(HEADER_VERSION) // TODO check version json and this
+		target.Size, _ = strconv.ParseInt(resp.Header.Get(HEADER_FILESIZE), 10, 64)
+		return target, err
+	}
+}
