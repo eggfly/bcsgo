@@ -4,6 +4,7 @@ bcsgo
 Golang Baidu BCS SDK
 
 百度云存储服务Go语言SDK
+
 [![Build Status](https://drone.io/github.com/eggfly/bcsgo/status.png)](https://drone.io/github.com/eggfly/bcsgo/latest)
 
 Baidu Official BCS Doc: [http://developer.baidu.com/wiki/index.php?title=docs/cplat/bcs](http://developer.baidu.com/wiki/index.php?title=docs/cplat/bcs)
